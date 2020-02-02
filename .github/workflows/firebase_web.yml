@@ -1,6 +1,12 @@
 name: Firebase Web CI
 
-on: push
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - "feature/**"
+      - "release/**"
 
 jobs:
   Build_Deploy_Web:
@@ -33,8 +39,23 @@ jobs:
         run: |
           CI=true yarn test
 
-      ## Build & Deploy
-      - name: Build & Deploy
+      ## Build & Deploy Dev
+      - name: Build & Deploy Dev
+        if: contains(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/develop'
         run: |
           yarn build
-          yarn firebase deploy --only hosting --token ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+          yarn firebase deploy --only hosting -P development --token ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+
+      ## Build & Deploy Staging
+      - name: Build & Deploy Staging
+        if: contains(github.ref, 'refs/heads/release/')
+        run: |
+          yarn build
+          yarn firebase deploy --only hosting -P staging --token ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
+
+      ## Build & Deploy Production
+      - name: Build & Deploy Production
+        if: github.ref == 'refs/heads/master'
+        run: |
+          yarn build
+          yarn firebase deploy --only hosting -P production --token ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
