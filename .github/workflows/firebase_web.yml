@@ -5,8 +5,7 @@ on:
     branches:
       - master
       - develop
-      - "feature/**"
-      - "release/**"
+      - staging
 
 jobs:
   Build_Deploy_Web:
@@ -41,14 +40,14 @@ jobs:
 
       ## Build & Deploy Dev
       - name: Build & Deploy Dev
-        if: contains(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/develop'
         run: |
           yarn build
           yarn firebase deploy --only hosting -P development --token ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
 
       ## Build & Deploy Staging
       - name: Build & Deploy Staging
-        if: contains(github.ref, 'refs/heads/release/')
+        if: github.ref == 'refs/heads/staging'
         run: |
           yarn build
           yarn firebase deploy --only hosting -P staging --token ${{ SECRETS.CI_FIREBASE_TOKEN }} --message "$CI_FIREBASE_MESSAGE"
