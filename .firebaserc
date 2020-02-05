@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "fmbm-dev"
+    "development": "fmbm-dev",
+    "staging": "fmbm-staging",
+    "production": "fmbm-production"
   }
 }
