@@ -41,6 +41,8 @@ jobs:
 
       ## Build & Deploy Dev
       - name: Build & Deploy Dev
+        env:
+          REACT_APP_NAME: My App - Development
         if: contains(github.ref, 'refs/heads/feature/') || github.ref == 'refs/heads/develop'
         run: |
           yarn build
@@ -48,6 +50,8 @@ jobs:
 
       ## Build & Deploy Staging
       - name: Build & Deploy Staging
+        env:
+          REACT_APP_NAME: My App - Staging
         if: contains(github.ref, 'refs/heads/release/')
         run: |
           yarn build
@@ -55,6 +59,8 @@ jobs:
 
       ## Build & Deploy Production
       - name: Build & Deploy Production
+        env:
+          REACT_APP_NAME: My App
         if: github.ref == 'refs/heads/master'
         run: |
           yarn build
